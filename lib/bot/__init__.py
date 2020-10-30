@@ -10,7 +10,7 @@ from apscheduler.triggers.cron import CronTrigger
 from ..db import db
 PREFIX = "+"
 OWNER_IDS = [381031540899053568]
-COGS = [path.split("\\")[-1][-3] for path in glob("./lib/cogs/*.py")]
+COGS = [path.split("\\")[-1][:-3] for path in glob("./lib/cogs/*.py")]
 
 class Ready(object):
 	def __init__(self):
@@ -33,8 +33,16 @@ class Bot(BotBase):
 		db.autosave(self.scheduler)
 		super().__init__(command_prefix=PREFIX,owner_ids=OWNER_IDS)
 
+	def setup(self):
+		for cog in COGS:
+			self.load_extension(f"lib.cogs.{cog}")
+			print(f"{cog} cog loaded")
+		print("setup comlete")
+		
+
 	def run(self,version):
 		self.VERSION=version
+		self.setup()
 
 		with open("./lib/bot/token.0","r", encoding="utf-8")as tf:
 			self.TOKEN = tf.read()
@@ -60,7 +68,7 @@ class Bot(BotBase):
 
 	async def on_command_error(self,ctx,exc):
 
-		if isinstance(exv,CommandNotFound):
+		if isinstance(exc,CommandNotFound):
 			pass
 
 		else:
@@ -75,7 +83,7 @@ class Bot(BotBase):
 				print("bot ready")
 				self.stdout = self.get_channel(771316587935563808)
 				channel = self.get_channel(771316587935563808)
-				await channel.send("Hi Guys, Ganz is my KING!!!")
+				await channel.send("Hi Guys, Ganz is my KING!!!2")
 				embed = Embed(title="Im here", description="Bot is ready",colour=0xFF0000, timestamp=datetime.utcnow())
 				embed.set_author(name="Ganz",icon_url="https://wallpaperaccess.com/full/1490040.jpg")
 				fields=[("Vladyslav Petriuk","Author",True),("w60083","Index",True)]
@@ -83,7 +91,7 @@ class Bot(BotBase):
 					embed.add_field(name=name,value=value,inline=inline)
 				await channel.send(embed=embed)
 				await channel.send(file=File("./data/images/smoke1.jpg"))
-				await self.stdout.send("Stdout hello")
+				
 				while not self.cogs_ready.all_ready():
 					await sleep(0.5)
 				self.ready = True
@@ -91,6 +99,9 @@ class Bot(BotBase):
 				print("bot reconnected")
 
 	async def on_message(self,message):
-			pass
+		if not message.author.bot:
+			await self.stdout.send("we are on line 94")
+			await self.process_commands(message)
+		 
 
 bot=Bot()
