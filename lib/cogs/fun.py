@@ -1,6 +1,7 @@
  
 from random import choice, randint
 from typing import Optional
+import random
 
 from aiohttp import request
 from discord import Member, Embed
@@ -13,26 +14,37 @@ class Fun(Cog):
 	def __init__(self, bot):
 		self.bot = bot
 
-	@command(name="hello", aliases=["hi"])
+	@command(name="hello", aliases=["hi","Hello", "Hi", "Hey","Privet","Siema","Cześć","Czesc","czesc","Guten Tag","Siemanko","привет","привіт","Привет","Привіт","хай","хелоу"])
 	async def say_hello(self, ctx):
-		await ctx.send(f"{choice(('Hello', 'Hi', 'Hey', 'Hiya'))} {ctx.author.mention}!")
+		await ctx.send(f"{choice(('Hello', 'Hi', 'Hey', 'Hiya','Privet','Siema','Cześć','Guten Tag','Whats cooking good looking!','Siemanko','You are so awesome today!'))} {ctx.author.mention}!")
 
-	@command(name="dice", aliases=["roll"])
-	@cooldown(1, 60, BucketType.user)
-	async def roll_dice(self, ctx, die_string: str):
-		dice, value = (int(term) for term in die_string.split("d"))
+	# @command(name="dice", aliases=["roll"])
+	# @cooldown(1, 60, BucketType.user)
+	# async def roll_dice(self, ctx, die_string: str):
+	# 	goal = random.randint(0, 100)
+	# 	ctx.send(f"{goal} goal")
+	# 	ctx.send("You need to choose right number from 0 to 100")
+	# 	while True:
+	# 		number = (int(die_string))
+	# 		if number < goal:
+	# 			ctx.send("Your number is smaller than goal")
+	# 			continue
+	# 		if number > goal:
+	# 			ctx.send("Your number is too big")
+	# 			continue
+	# 		if number == goal:
+	# 			print("You are winner!!!")
+	# 			break
+	# 		else:
+	# 			break
 
-		if dice <= 25:
-			rolls = [randint(1, value) for i in range(dice)]
 
-			await ctx.send(" + ".join([str(r) for r in rolls]) + f" = {sum(rolls)}")
+			
 
-		else:
-			await ctx.send("I can't roll that many dice. Please try a lower number.")
-
-	@command(name="slap", aliases=["hit"])
+	@command(name="slap", aliases=["hit","punch","kick"])
 	async def slap_member(self, ctx, member: Member, *, reason: Optional[str] = "for no reason"):
-		await ctx.send(f"{ctx.author.display_name} slapped {member.mention} {reason}!")
+		await ctx.message.delete()
+		await ctx.send(f"{ctx.author.display_name} punch {member.mention} {reason}!")
 
 	@slap_member.error
 	async def slap_member_error(self, ctx, exc):
@@ -79,7 +91,6 @@ class Fun(Cog):
 
 	@Cog.listener()
 	async def on_ready(self):
-		await self.bot.stdout.send("incog")
 		print("fun cog ready")
 		if not self.bot.ready:
 			self.bot.cogs_ready.ready_up("fun")

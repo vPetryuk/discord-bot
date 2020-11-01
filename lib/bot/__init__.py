@@ -4,14 +4,16 @@ from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from discord.ext.commands import Bot as BotBase
 from discord import Embed , File
 from datetime import datetime
-from discord.ext.commands import CommandNotFound
+from discord.ext.commands import (CommandNotFound, BadArgument, MissingRequiredArgument,
+								  CommandOnCooldown)
 from apscheduler.triggers.cron import CronTrigger
+from discord.errors import HTTPException, Forbidden
 
 from ..db import db
 PREFIX = "+"
 OWNER_IDS = [381031540899053568]
 COGS = [path.split("\\")[-1][:-3] for path in glob("./lib/cogs/*.py")]
-
+IGNORE_EXCEPTIONS = (CommandNotFound, BadArgument)
 class Ready(object):
 	def __init__(self):
 		for cog in COGS:
@@ -66,13 +68,28 @@ class Bot(BotBase):
     			await channel.send("ERROR")
     		raise
 
-	async def on_command_error(self,ctx,exc):
-
-		if isinstance(exc,CommandNotFound):
+	async def on_command_error(self, ctx, exc):
+		if any([isinstance(exc, error) for error in IGNORE_EXCEPTIONS]):
 			pass
 
+		elif isinstance(exc, MissingRequiredArgument):
+			await ctx.send("One or more required arguments are missing.")
+
+		elif isinstance(exc, CommandOnCooldown):
+			await ctx.send(f"That command is on {str(exc.cooldown.type).split('.')[-1]} cooldown. Try again in {exc.retry_after:,.2f} secs.")
+
+		elif hasattr(exc, "original"):
+			# if isinstance(exc.original, HTTPException):
+			# 	await ctx.send("Unable to send message.")
+
+			if isinstance(exc.original, Forbidden):
+				await ctx.send("I do not have permission to do that.")
+
+			else:
+				raise exc.original
+
 		else:
-			raise exc.original
+			raise exc
 			
 
 	
@@ -83,10 +100,10 @@ class Bot(BotBase):
 				print("bot ready")
 				self.stdout = self.get_channel(771316587935563808)
 				channel = self.get_channel(771316587935563808)
-				await channel.send("Hi Guys, Ganz is my KING!!!2")
-				embed = Embed(title="Im here", description="Bot is ready",colour=0xFF0000, timestamp=datetime.utcnow())
-				embed.set_author(name="Ganz",icon_url="https://wallpaperaccess.com/full/1490040.jpg")
-				fields=[("Vladyslav Petriuk","Author",True),("w60083","Index",True)]
+				
+				embed = Embed(title="Im here", description="Bot is online",colour=0xFF0000, timestamp=datetime.utcnow())
+				#embed.set_author(name="Ganz" icon_url="https://wallpaperaccess.com/full/1490040.jpg")
+				fields=[("Vladyslav Petriuk","Author",True),("w60083","Index",True),("Commands","--------------------------------------------",False),("Hello","Say +hi",True),("echo","+echo message",True),("punch","+punch member reason",True)]
 				for name ,value,inline in fields:
 					embed.add_field(name=name,value=value,inline=inline)
 				await channel.send(embed=embed)
@@ -100,7 +117,6 @@ class Bot(BotBase):
 
 	async def on_message(self,message):
 		if not message.author.bot:
-			await self.stdout.send("we are on line 94")
 			await self.process_commands(message)
 		 
 
