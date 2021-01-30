@@ -9,7 +9,7 @@ from discord.ext.commands import (CommandNotFound, BadArgument, MissingRequiredA
 from apscheduler.triggers.cron import CronTrigger
 from discord.errors import HTTPException, Forbidden
 
-from ..db import db
+
 PREFIX = "+"
 OWNER_IDS = [381031540899053568]
 COGS = [path.split("\\")[-1][:-3] for path in glob("./lib/cogs/*.py")]
@@ -32,7 +32,7 @@ class Bot(BotBase):
 		self.ready = False
 		self.cogs_ready=Ready()
 		self.scheduler=AsyncIOScheduler()
-		db.autosave(self.scheduler)
+		
 		super().__init__(command_prefix=PREFIX,owner_ids=OWNER_IDS)
 
 	def setup(self):
@@ -103,11 +103,16 @@ class Bot(BotBase):
 				
 				embed = Embed(title="Im here", description="Bot is online",colour=0xFF0000, timestamp=datetime.utcnow())
 				#embed.set_author(name="Ganz" icon_url="https://wallpaperaccess.com/full/1490040.jpg")
-				fields=[("Vladyslav Petriuk","Author",True),("w60083","Index",True),("Commands","--------------------------------------------",False),("Hello","Say +hi",True),("echo","+echo message",True),("punch","+punch member reason",True)]
+				fields=[("Vladyslav Petriuk , Alona Kovtun , Vladyslava Tokar","Authors",True),("     w60083                     w60065                 w60092","Indexs",False),
+				("Commands","----------------------------------------------------------------------------------",False),
+				("Hello","Say +hi",True),("Echo","+echo message",True),("Punch","+punch member reason",True),("Facts", "+fact animal", True),
+				("Meme", "+meme", True),("Dice", "+dice number_of_numbers d  ", True),("Flip", "+flip", True), ("8ball", "+8ball question", True),
+				("Clear messages", "+clear ", True), ("Help", "+help", True), ]
 				for name ,value,inline in fields:
 					embed.add_field(name=name,value=value,inline=inline)
+				embed.set_author(name="Bot", icon_url="https://i.pinimg.com/originals/9c/8c/21/9c8c21100af2a2834723c50903e86bda.jpg")	
 				await channel.send(embed=embed)
-				await channel.send(file=File("./data/images/smoke1.jpg"))
+				
 				
 				while not self.cogs_ready.all_ready():
 					await sleep(0.5)

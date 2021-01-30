@@ -1,13 +1,13 @@
- 
 from random import choice, randint
 from typing import Optional
 import random
-
 from aiohttp import request
-from discord import Member, Embed
+from discord import Member, Embed, File
 from discord.ext.commands import Cog, BucketType
 from discord.ext.commands import BadArgument
 from discord.ext.commands import command, cooldown
+from discord.ext.commands import command, has_permissions, bot_has_permissions
+
 
 
 class Fun(Cog):
@@ -38,8 +38,31 @@ class Fun(Cog):
 	# 		else:
 	# 			break
 
+	@command(name="dice", aliases=["roll"])
+	@cooldown(1, 5, BucketType.user)
+	async def rool_dice(self, ctx, die_string: str):
+		dice, value = (int(term) for term in die_string.split("d"))
 
+		if dice <= 25:
+			rolls = [randint(1, value) for i in range(dice)]
+			await ctx.send(" + ".join([str(r) for r in rolls]) + f" = {sum(rolls)}")
+		else:
+			await ctx.send("I can't roll that many dice. Please try a lower number.")
 			
+	@command(name="clear", aliases=["purge"])
+	@bot_has_permissions(manage_messages=True)
+	@has_permissions(manage_messages=True)
+	async def clear_messages(self, ctx, limit: Optional[int] = 1):
+		if 0 < limit <= 100:
+			with ctx.channel.typing():
+				await ctx.message.delete()
+				deleted = await ctx.channel.purge(limit=limit)
+
+				await ctx.send(f"Deleted {len(deleted):,} messages.", delete_after=5)
+
+		else:
+			await ctx.send("The limit provided is not within acceptable bounds.")
+		
 
 	@command(name="slap", aliases=["hit","punch","kick"])
 	async def slap_member(self, ctx, member: Member, *, reason: Optional[str] = "for no reason"):
@@ -89,6 +112,52 @@ class Fun(Cog):
 		else:
 			await ctx.send("No facts are available for that animal.")
 
+	@command(name="meme")
+	@cooldown(3, 60, BucketType.guild)
+	async def meme(self, ctx):
+		
+			meme_url = f"https://some-random-api.ml/meme"
+			
+
+			
+
+			async with request("GET", meme_url, headers={}) as response:
+				if response.status == 200:
+					data = await response.json()
+					meme_data = data["image"]
+					embed = Embed(title="Meme",
+								  
+								  colour=ctx.author.colour)
+					if meme_url is not None:
+						embed.set_image(url=meme_data)
+					await ctx.send(embed=embed)
+
+				else:
+					await ctx.send(f"API returned a {response.status} status.")
+
+
+	@command(name='flip',aliases=['Flip'])
+	async def flip(self,ctx):
+		headTails = ['YES','NO']
+		await ctx.send(random.choice(headTails))
+
+
+	@command(name='8ball',aliases=['8Ball'])
+	async def ball(self,ctx, *args):
+		await ctx.send(file=File("./data/images/ball.png"))
+		mylist = ""
+		for x in args:
+			mylist += " " + x
+
+		options = ['As I see it, yes.','Ask again later.','Better not tell you now.', 'Cannot predict now.', 'Concentrate and ask again.',
+					'Don \'t count on it.', 'It is certain.', 'It is decidedly so.', 'Most likely.', 'My reply is no.', 'My sources say no.',
+					'Outlook not so good.', 'Outlook good.', 'Reply hazy, try again.', 'Signs point to yes.', 'Very doubtful.', 'Without a doubt.',
+					' Yes.', 'Yes – definitely.', ' You may rely on it.']
+
+		await ctx.send(f'Question: "{mylist}" \n Answer: {random.choice(options)}')
+
+
+		
 	@Cog.listener()
 	async def on_ready(self):
 		print("fun cog ready")
