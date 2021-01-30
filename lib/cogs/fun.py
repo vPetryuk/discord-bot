@@ -14,7 +14,8 @@ class Fun(Cog):
 	def __init__(self, bot):
 		self.bot = bot
 
-	@command(name="hello", aliases=["hi","Hello", "Hi", "Hey","Privet","Siema","Cześć","Czesc","czesc","Guten Tag","Siemanko","привет","привіт","Привет","Привіт","хай","хелоу"])
+	@command(name="hello", brief="Hello - Say hello",
+		aliases=["hi","Hello", "Hi", "Hey","Siema","czesc","Guten Tag","привет","привіт"])
 	async def say_hello(self, ctx):
 		await ctx.send(f"{choice(('Hello', 'Hi', 'Hey', 'Hiya','Privet','Siema','Cześć','Guten Tag','Whats cooking good looking!','Siemanko','You are so awesome today!'))} {ctx.author.mention}!")
 
@@ -38,7 +39,7 @@ class Fun(Cog):
 	# 		else:
 	# 			break
 
-	@command(name="dice", aliases=["roll"])
+	@command(name="dice", brief="Dice - output of this command is some number of random numbers in some range", aliases=["roll"])
 	@cooldown(1, 5, BucketType.user)
 	async def rool_dice(self, ctx, die_string: str):
 		dice, value = (int(term) for term in die_string.split("d"))
@@ -49,7 +50,7 @@ class Fun(Cog):
 		else:
 			await ctx.send("I can't roll that many dice. Please try a lower number.")
 			
-	@command(name="clear", aliases=["purge"])
+	@command(name="clear", brief="Clear - delete messages", aliases=["purge"])
 	@bot_has_permissions(manage_messages=True)
 	@has_permissions(manage_messages=True)
 	async def clear_messages(self, ctx, limit: Optional[int] = 1):
@@ -57,30 +58,28 @@ class Fun(Cog):
 			with ctx.channel.typing():
 				await ctx.message.delete()
 				deleted = await ctx.channel.purge(limit=limit)
-
 				await ctx.send(f"Deleted {len(deleted):,} messages.", delete_after=5)
-
 		else:
 			await ctx.send("The limit provided is not within acceptable bounds.")
 		
 
-	@command(name="slap", aliases=["hit","punch","kick"])
+	@command(name="slap", brief="Slap - write some  to channel anonimous", aliases=["hit","punch","kick"])
 	async def slap_member(self, ctx, member: Member, *, reason: Optional[str] = "for no reason"):
 		await ctx.message.delete()
-		await ctx.send(f"{ctx.author.display_name} punch {member.mention} {reason}!")
+		await ctx.send(f"{ctx.author.display_name} punch {member.mention}{reason}!")
 
 	@slap_member.error
 	async def slap_member_error(self, ctx, exc):
 		if isinstance(exc, BadArgument):
 			await ctx.send("I can't find that member.")
 
-	@command(name="echo", aliases=["say"])
+	@command(name="echo", brief="Echo - write some message to channel anonimous", aliases=["say"])
 	@cooldown(1, 15, BucketType.guild)
 	async def echo_message(self, ctx, *, message):
 		await ctx.message.delete()
 		await ctx.send(message)
 
-	@command(name="fact")
+	@command(name="fact", brief="Fact - shows fact about animals",)
 	@cooldown(3, 60, BucketType.guild)
 	async def animal_fact(self, ctx, animal: str):
 		if (animal := animal.lower()) in ("dog", "cat", "panda", "fox", "bird", "koala"):
@@ -112,21 +111,15 @@ class Fun(Cog):
 		else:
 			await ctx.send("No facts are available for that animal.")
 
-	@command(name="meme")
+	@command(name="meme", brief="Meme - show random memes",)
 	@cooldown(3, 60, BucketType.guild)
 	async def meme(self, ctx):
-		
 			meme_url = f"https://some-random-api.ml/meme"
-			
-
-			
-
 			async with request("GET", meme_url, headers={}) as response:
 				if response.status == 200:
 					data = await response.json()
 					meme_data = data["image"]
 					embed = Embed(title="Meme",
-								  
 								  colour=ctx.author.colour)
 					if meme_url is not None:
 						embed.set_image(url=meme_data)
@@ -136,13 +129,13 @@ class Fun(Cog):
 					await ctx.send(f"API returned a {response.status} status.")
 
 
-	@command(name='flip',aliases=['Flip'])
+	@command(name='flip', brief="Flip - shows random generated YES or NO",aliases=['Flip'])
 	async def flip(self,ctx):
 		headTails = ['YES','NO']
 		await ctx.send(random.choice(headTails))
 
 
-	@command(name='8ball',aliases=['8Ball'])
+	@command(name='8ball', brief="8ball - give the answer", aliases=['8Ball'])
 	async def ball(self,ctx, *args):
 		await ctx.send(file=File("./data/images/ball.png"))
 		mylist = ""
