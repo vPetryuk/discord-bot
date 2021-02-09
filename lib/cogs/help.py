@@ -8,6 +8,12 @@ from discord.ext.commands import command
 
 
 def syntax(command):
+<<<<<<< HEAD
+	'''
+	Zwraca aliasy oraz argumenty funkcji
+	'''
+=======
+>>>>>>> 2ee96bc5ac30688ac73426731e019fbc529ded6d
 	cmd_and_aliases = "|".join([str(command), *command.aliases])
 	params = []
 
@@ -27,6 +33,12 @@ class HelpMenu(ListPageSource):
 		super().__init__(data, per_page=3)
 
 	async def write_page(self, menu, fields=[]):
+<<<<<<< HEAD
+		'''
+		Interfejs funkcji Help
+		'''
+=======
+>>>>>>> 2ee96bc5ac30688ac73426731e019fbc529ded6d
 		offset = (menu.current_page*self.per_page) + 1
 		len_data = len(self.entries)
 
@@ -64,7 +76,13 @@ class Help(Cog):
 
 	@command(name="help", brief="Help - helper")
 	async def show_help(self, ctx, cmd: Optional[str]):
+<<<<<<< HEAD
+		'''
+		Funkcja wyjaśnia funkcje znajdujące w danym bocie 
+		'''
+=======
 		"""Shows this message."""
+>>>>>>> 2ee96bc5ac30688ac73426731e019fbc529ded6d
 		if cmd is None:
 			menu = MenuPages(source=HelpMenu(ctx, list(self.bot.commands)),
 							 delete_message_after=True,
