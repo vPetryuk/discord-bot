@@ -28,21 +28,11 @@ class Fun(Cog):
 	@cooldown(1, 5, BucketType.user)
 	async def rool_dice(self, ctx, die_string: str):
 		'''
-
-<<<<<<< HEAD
 		Funkcja wypisuje sumę liczb, ilość których jest równa pierwszemu parametru , a ich wartość jest w przedziale drugiego parametru
 		:param die_string: illość czyfr i przedział możliwych wartości
 
 		'''
 		dice, value = (int(term) for term in die_string.split("d"))
-
-=======
-	@command(name="dice", brief="Dice - output of this command is some number of random numbers in some range", aliases=["roll"])
-	@cooldown(1, 5, BucketType.user)
-	async def rool_dice(self, ctx, die_string: str):
-		dice, value = (int(term) for term in die_string.split("d"))
-
->>>>>>> 2ee96bc5ac30688ac73426731e019fbc529ded6d
 		if dice <= 25:
 			rolls = [randint(1, value) for i in range(dice)]
 			await ctx.send(" + ".join([str(r) for r in rolls]) + f" = {sum(rolls)}")
@@ -53,13 +43,10 @@ class Fun(Cog):
 	@bot_has_permissions(manage_messages=True)
 	@has_permissions(manage_messages=True)
 	async def clear_messages(self, ctx, limit: Optional[int] = 1):
-<<<<<<< HEAD
 		'''
 		Funkcja usuwa wiadomości 
 		:param limit: ilość wiadomości do usunięcia
 		'''
-=======
->>>>>>> 2ee96bc5ac30688ac73426731e019fbc529ded6d
 		if 0 < limit <= 100:
 			with ctx.channel.typing():
 				await ctx.message.delete()
@@ -69,11 +56,8 @@ class Fun(Cog):
 			await ctx.send("The limit provided is not within acceptable bounds.")
 		
 
-<<<<<<< HEAD
+
 	@command(name="slap", brief="Slap - write some  to channel ", aliases=["hit","punch","kick"])
-=======
-	@command(name="slap", brief="Slap - write some  to channel anonimous", aliases=["hit","punch","kick"])
->>>>>>> 2ee96bc5ac30688ac73426731e019fbc529ded6d
 	async def slap_member(self, ctx, member: Member, *, reason: Optional[str] = "for no reason"):
 		'''
 		Wysyłanie wiadomośći do użytkownika
@@ -138,7 +122,6 @@ class Fun(Cog):
 	@command(name="meme", brief="Meme - show random memes",)
 	@cooldown(3, 60, BucketType.guild)
 	async def meme(self, ctx):
-<<<<<<< HEAD
 		'''
 		Funkcja wyświetla randomowy mem z sieci
 		'''
@@ -154,44 +137,25 @@ class Fun(Cog):
 
 			else:
 				await ctx.send(f"API returned a {response.status} status.")
-=======
-			meme_url = f"https://some-random-api.ml/meme"
-			async with request("GET", meme_url, headers={}) as response:
-				if response.status == 200:
-					data = await response.json()
-					meme_data = data["image"]
-					embed = Embed(title="Meme",
-								  colour=ctx.author.colour)
-					if meme_url is not None:
-						embed.set_image(url=meme_data)
-					await ctx.send(embed=embed)
 
-				else:
-					await ctx.send(f"API returned a {response.status} status.")
->>>>>>> 2ee96bc5ac30688ac73426731e019fbc529ded6d
 
 
 	@command(name='flip', brief="Flip - shows random generated YES or NO",aliases=['Flip'])
 	async def flip(self,ctx):
-<<<<<<< HEAD
 		'''
 		Wyświetla randomowo 'YES' lub 'NO' z szansem 50/50
 		'''
-=======
->>>>>>> 2ee96bc5ac30688ac73426731e019fbc529ded6d
+
 		headTails = ['YES','NO']
 		await ctx.send(random.choice(headTails))
 
 
 	@command(name='8ball', brief="8ball - give the answer", aliases=['8Ball'])
 	async def ball(self,ctx, *args):
-<<<<<<< HEAD
 		'''
 		Implementacja gry 8ball, czyli zwraca różne odpowiedzi na pytania od użytkownika, takie jak : "Tak", "Nie", "Zapytaj póżniej" i td.
 		:param *args: twoje pytanie do magicznej kuli
 		'''
-=======
->>>>>>> 2ee96bc5ac30688ac73426731e019fbc529ded6d
 		await ctx.send(file=File("./data/images/ball.png"))
 		mylist = ""
 		for x in args:

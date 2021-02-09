@@ -107,11 +107,11 @@ class Bot(BotBase):
 				("Commands","----------------------------------------------------------------------------------",False),
 				("Hello","Say +hi",True),("Echo","+echo message",True),("Punch","+punch member reason",True),("Facts", "+fact animal", True),
 				("Meme", "+meme", True),("Dice", "+dice number_of_numbers d  ", True),("Flip", "+flip", True), ("8ball", "+8ball question", True),
-<<<<<<< HEAD
+
 				("Clear messages", "+clear number_of_messages_to_delete ", True), ("Help", "+help", True), ]
-=======
-				("Clear messages", "+clear ", True), ("Help", "+help", True), ]
->>>>>>> 2ee96bc5ac30688ac73426731e019fbc529ded6d
+
+				
+
 				for name ,value,inline in fields:
 					embed.add_field(name=name,value=value,inline=inline)
 				embed.set_author(name="Bot", icon_url="https://i.pinimg.com/originals/9c/8c/21/9c8c21100af2a2834723c50903e86bda.jpg")	
