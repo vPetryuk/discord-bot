@@ -1,5 +1,5 @@
 # discord-bot
- project w60083, w60065, 60092.
+ project w60083
  
                                                       Opis projektu
 Celem projektu jest tworzenie Discord Bota, który wypełnia różne funkcji.
