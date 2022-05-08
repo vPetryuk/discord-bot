@@ -1,8 +1,6 @@
 # discord-bot
- project w60083
+
  
-                                                      Opis projektu
-Celem projektu jest tworzenie Discord Bota, który wypełnia różne funkcji.
 
                                                       Opis funkcji
 -Funkcja Hello - zwraca pozdrowienie do użytkownika który jej wywołuje
